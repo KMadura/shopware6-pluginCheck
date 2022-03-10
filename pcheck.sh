@@ -96,6 +96,11 @@ pCheckSymlinks () {
 }
 
 pCheckDetectPhpErrors () {
+	if [[ $pDependencyPhp -eq 0 ]]
+	then
+		exit
+	fi
+
 	for pef in $(find . -type f -name "*.php")
 	do
 		foundsyntaxerrors=$(php -l $pef | grep -v 'No syntax errors')
@@ -161,6 +166,7 @@ pGetPhpVersion () {
 	then
 		exit
 	fi
+	
 	echo "[$pGlobalTestsTitle] PHP version: "$(php -v | head -1)
 }
 
@@ -169,6 +175,7 @@ pGetPhpLocale () {
 	then
 		exit
 	fi
+	
 	echo "[$pGlobalTestsTitle] PHP locale: "$(php -r 'echo locale_get_default();')
 }
 
