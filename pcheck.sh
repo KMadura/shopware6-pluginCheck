@@ -191,13 +191,13 @@ pGetMysqlConn () {
 		exit
 	fi
 	
-	if [[ $pDependencyPhp -eq 0 ]]
-	then
-		exit
-	fi
-	
 	# 0 - user, 1 - pass, 2 - host, 3 - port, 4 - name
 	pDatabase=($(cat .env | grep 'DATABASE_URL' | grep -o -P '(?<=mysql:\/\/).+' | sed -e 's/[:@\/]/ /g'))
+	
+	if [[ -z $pDatabase || -z ${pDatabase[0]} || -z ${pDatabase[1]} || -z ${pDatabase[2]} || -z ${pDatabase[3]} || -z ${pDatabase[4]} ]]
+	then
+		echo "[$pGlobalTestsTitle] MySQL connection: count not read DATABASE_URL from .env file. Please check if it is formatted correctly"
+	fi
 	
 	mysql --user="${pDatabase[0]}" --password="${pDatabase[1]}" --host="${pDatabase[2]}" --port="${pDatabase[3]}" "${pDatabase[4]}" -e '\q' 2>/dev/null
 	if [[ $? -gt 0 ]]
